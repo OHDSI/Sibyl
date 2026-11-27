@@ -50,7 +50,3 @@ Long sessions also expire. If rD2E calls start failing after the notebook has be
 |---|---|
 | `Requested package <name> not found in webR binary repo.` | The package isn't available in the notebook. Contact the platform team. |
 | `object 'cohortDefinitionSet' not found` (or another name) [TO VERIFY] exact wording | A cell above wasn't run. Run the cells from the top. |
-
-## Still stuck?
-
-[PLACEHOLDER] Add the support channel and contact. When you ask for help, include the cell, the full message, and the `flowrunId` if you submitted a run.
