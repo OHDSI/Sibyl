@@ -32,8 +32,3 @@ ATLAS cohort IDs
 - [Getting started](getting-started.md): a complete example, start to finish
 - Reference: [get_cohort_definition_set](reference/get_cohort_definition_set.md) · [create_cohort_definition](reference/create_cohort_definition.md) · [create_options](reference/create_options.md) · [run_strategus_flow](reference/run_strategus_flow.md)
 - Guides: [Working with cohorts](guides/working-with-cohorts.md) · [Submitting a study](guides/submitting-a-study.md) · [Troubleshooting](guides/troubleshooting.md)
-
-## About this guide
-
-- Examples and messages were checked on the test host `internal.d2e.sg` on 2026-11-23, against trex-notebook `242febe` (`origin/develop`). The "Checked" column in error tables says whether a message was reproduced on the host or read from the source code.
-- `[TO VERIFY]` marks statements not yet confirmed on the host. Resolve them before relying on them.

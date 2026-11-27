@@ -36,26 +36,9 @@ print(cohortDefinitionSet[, c("cohortId", "cohortName", "generateStats")])
 ```
   cohortId                    cohortName generateStats
 1       44                    GDM Cohort          TRUE
-2       49           gusto_nongdm_cohort          TRUE
+2       49                Non-GDM Cohort          TRUE
 3       50 Postpartum T2D Outcome Cohort          TRUE
 ```
-
-## Messages you'll see
-
-One line per cohort while it loads. They are shown in red but are not errors.
-
-```
-Fetching cohortId: 44
-Fetching cohortId: 49
-Fetching cohortId: 50
-```
-
-## Errors
-
-| Message | Cause | Fix | Checked |
-|---|---|---|---|
-| `Must provide a non-zero length cohortIds vector.` | No IDs were given | Pass at least one ID | host |
-| `HTTP GET failed with status <code>: <details>` | The cohort could not be loaded: for example the ID doesn't exist, or your session has expired | Check the ID in ATLAS; if you were signed out, sign in again and re-run your cells. [TO VERIFY] which status codes appear in each case | source |
 
 ## Examples
 
@@ -76,7 +59,3 @@ print(cohortDefinitionSet[, c("cohortId", "cohortName")])
 - [Working with cohorts](../guides/working-with-cohorts.md)
 - [create_cohort_definition()](create_cohort_definition.md) to create a new cohort
 - [Getting started](../getting-started.md)
-
----
-
-Checked on internal.d2e.sg, 2026-11-23, against trex-notebook `242febe`.

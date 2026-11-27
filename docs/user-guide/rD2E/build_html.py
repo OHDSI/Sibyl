@@ -5,8 +5,8 @@ Usage:
     python build_html.py                  # writes rD2E-user-guide.html next to this script
 
 The Markdown files are the source of truth. This script stitches them into one page
-with a sidebar, turns links between pages into in-page anchors, shows the "Checked"
-column as chips, and highlights [TO VERIFY] and [PLACEHOLDER].
+with a sidebar, turns links between pages into in-page anchors, and highlights
+[TO VERIFY] and [PLACEHOLDER].
 The output is page content for a claude.ai artifact (no <html>/<head>/<body> tags).
 """
 import html
@@ -87,9 +87,6 @@ th { font-weight: 600; color: var(--muted); font-size: .78rem; letter-spacing: .
 tr:last-child td { border-bottom: 0; }
 td code { white-space: nowrap; }
 td:first-child code { white-space: normal; }
-.chip { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
-.chip-host { color: var(--ok); background: var(--ok-bg); }
-.chip-source { color: var(--src); background: var(--src-bg); }
 mark.flag { color: var(--flag); background: var(--flag-bg); font-weight: 600; font-size: .85em; padding: .05em .4em; border-radius: 4px; white-space: nowrap; }
 blockquote { margin: 1rem 0; padding: .8rem 1rem; border-left: 3px solid var(--flag); background: var(--flag-bg); border-radius: 0 8px 8px 0; }
 blockquote p { margin: 0; }
@@ -123,8 +120,6 @@ def to_html(md_text):
     for level in (4, 3, 2, 1):
         body = re.sub(rf"<(/?)h{level}>", rf"<\1h{level + 1}>", body)
     body = body.replace("<table>", '<div class="table-wrap"><table>').replace("</table>", "</table></div>")
-    body = re.sub(r"<td>host</td>", '<td><span class="chip chip-host">host</span></td>', body)
-    body = re.sub(r"<td>source</td>", '<td><span class="chip chip-source">source</span></td>', body)
     body = re.sub(r"\[(TO VERIFY|PLACEHOLDER)\]", r'<mark class="flag">\1</mark>', body)
     body = body.replace('<a href="http', '<a target="_blank" rel="noopener" href="http')
     return body
@@ -152,9 +147,7 @@ def main():
     <p class="brand"><code>rD2E</code> user guide</p>
     <p class="tagline">Cohorts and Strategus runs from the D2E notebook</p>
     {nav}
-    <div class="legend"><span class="chip chip-host">host</span> checked on the test host
-      <span class="chip chip-source">source</span> from the code
-      <mark class="flag">TO VERIFY</mark> not yet confirmed</div>
+    <div class="legend"><mark class="flag">TO VERIFY</mark> not yet confirmed</div>
   </nav>
   <main>
     {''.join(sections)}

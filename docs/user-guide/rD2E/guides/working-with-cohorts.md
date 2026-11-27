@@ -49,7 +49,7 @@ The notebook holds the definition as it was when you loaded it. After editing a 
 
 ## Create a cohort from the notebook
 
-[create_cohort_definition()](../reference/create_cohort_definition.md) creates a new cohort definition in ATLAS, for example a copy of an existing one under a new name. [TO VERIFY] Not yet checked on the test host.
+[create_cohort_definition()](../reference/create_cohort_definition.md) creates a new cohort definition in ATLAS, for example a copy of an existing one under a new name. [TO VERIFY]
 
 ## See also
 

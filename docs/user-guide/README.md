@@ -27,13 +27,15 @@ The rD2E HTML page is also published as a claude.ai artifact. After regenerating
 
 - Describe only what a researcher sees or types. Leave out storage, endpoints, environment variables and internal helpers.
 - R only.
-- Check examples and messages on the test host (`internal.d2e.sg`). Record where and when in the page footer, and in error tables mark each message `host` (reproduced) or `source` (read from the code).
+- Check examples and messages on the test host (`internal.d2e.sg`) before publishing. Keep the record of what was checked out of the guide pages; the guides don't show verification notes.
+- rD2E guide: use generic examples (no study or dataset names). Document only `source_token_study_code` and `analysis_results_name` for `create_options()`; its other arguments are no longer used.
+- rD2E reference pages: Usage, Arguments, Value, Examples, See also. Messages and errors live only in `guides/troubleshooting.md`.
 - `[TO VERIFY]` and `[PLACEHOLDER]` are highlighted in both outputs. Resolve them before presenting or sharing.
 - The deck's Markdown format is described at the top of `researcher-onboarding.md`.
 
 ## Keeping the rD2E guide in sync
 
-rD2E is defined in `plugins/notebook-plugin/src/kernels/rD2E.R`. When a function's arguments, return value or messages change, update its page in `rD2E/reference/` and the table in `rD2E/guides/troubleshooting.md` in the same change.
+rD2E is defined in `plugins/notebook-plugin/src/kernels/rD2E.R`. When a function's arguments, return value or messages change, update its page in `rD2E/reference/` and its messages in `rD2E/guides/troubleshooting.md` in the same change.
 
 ## Git
 

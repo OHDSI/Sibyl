@@ -13,13 +13,12 @@
 
 ```r
 options <- create_options(
-  upload_results          = FALSE,
-  source_token_study_code = "gusto_v3",
-  analysis_results_name   = "gusto_t2d_outcome_source"
+  source_token_study_code = "my_dataset",
+  analysis_results_name   = "t2d_incidence_v1"
 )
 ```
 
-See [create_options()](../reference/create_options.md) for every argument. Most studies only need these two settings plus `upload_results = FALSE`, as in the team's notebooks.
+See [create_options()](../reference/create_options.md) for both arguments.
 
 ## Submit once
 

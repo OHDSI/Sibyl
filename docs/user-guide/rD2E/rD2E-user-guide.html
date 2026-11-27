@@ -56,9 +56,6 @@ th { font-weight: 600; color: var(--muted); font-size: .78rem; letter-spacing: .
 tr:last-child td { border-bottom: 0; }
 td code { white-space: nowrap; }
 td:first-child code { white-space: normal; }
-.chip { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
-.chip-host { color: var(--ok); background: var(--ok-bg); }
-.chip-source { color: var(--src); background: var(--src-bg); }
 mark.flag { color: var(--flag); background: var(--flag-bg); font-weight: 600; font-size: .85em; padding: .05em .4em; border-radius: 4px; white-space: nowrap; }
 blockquote { margin: 1rem 0; padding: .8rem 1rem; border-left: 3px solid var(--flag); background: var(--flag-bg); border-radius: 0 8px 8px 0; }
 blockquote p { margin: 0; }
@@ -78,9 +75,7 @@ hr + p { color: var(--muted); font-size: .85rem; }
     <p class="brand"><code>rD2E</code> user guide</p>
     <p class="tagline">Cohorts and Strategus runs from the D2E notebook</p>
     <h2>Start</h2><ul><li><a href="#overview">Overview</a></li><li><a href="#getting-started">Getting started</a></li></ul><h2>Reference</h2><ul><li><a class="fn" href="#get-cohort-definition-set">get_cohort_definition_set()</a></li><li><a class="fn" href="#create-cohort-definition">create_cohort_definition()</a></li><li><a class="fn" href="#create-options">create_options()</a></li><li><a class="fn" href="#run-strategus-flow">run_strategus_flow()</a></li></ul><h2>Guides</h2><ul><li><a href="#working-with-cohorts">Working with cohorts</a></li><li><a href="#submitting-a-study">Submitting a study</a></li><li><a href="#troubleshooting">Troubleshooting</a></li></ul>
-    <div class="legend"><span class="chip chip-host">host</span> checked on the test host
-      <span class="chip chip-source">source</span> from the code
-      <mark class="flag">TO VERIFY</mark> not yet confirmed</div>
+    <div class="legend"><mark class="flag">TO VERIFY</mark> not yet confirmed</div>
   </nav>
   <main>
     <section class="page" id="overview"><h2>rD2E user guide</h2>
@@ -130,13 +125,8 @@ hr + p { color: var(--muted); font-size: .85rem; }
 <li><a href="#getting-started">Getting started</a>: a complete example, start to finish</li>
 <li>Reference: <a href="#get-cohort-definition-set">get_cohort_definition_set</a> · <a href="#create-cohort-definition">create_cohort_definition</a> · <a href="#create-options">create_options</a> · <a href="#run-strategus-flow">run_strategus_flow</a></li>
 <li>Guides: <a href="#working-with-cohorts">Working with cohorts</a> · <a href="#submitting-a-study">Submitting a study</a> · <a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-<h3>About this guide</h3>
-<ul>
-<li>Examples and messages were checked on the test host <code>internal.d2e.sg</code> on 2026-11-23, against trex-notebook <code>242febe</code> (<code>origin/develop</code>). The "Checked" column in error tables says whether a message was reproduced on the host or read from the source code.</li>
-<li><code><mark class="flag">TO VERIFY</mark></code> marks statements not yet confirmed on the host. Resolve them before relying on them.</li>
 </ul></section><section class="page" id="getting-started"><h2>Getting started</h2>
-<p>This walkthrough follows a real study from the notebook <em>GUSTO-incidence-strategus_v1</em> on the test host: the incidence of postpartum type 2 diabetes in pregnancies with and without gestational diabetes (GDM). It runs on the <code>gusto_v3</code> dataset.</p>
+<p>This walkthrough follows an example study: the incidence of postpartum type 2 diabetes in pregnancies with and without gestational diabetes (GDM). Replace the cohort IDs, dataset code and results name with your own.</p>
 <h3>1. Find your cohort IDs</h3>
 <p>In ATLAS, open <strong>Cohort Definitions</strong>. The <strong>ID</strong> column is the number you use in R. This example uses:</p>
 <div class="table-wrap"><table>
@@ -153,7 +143,7 @@ hr + p { color: var(--muted); font-size: .85rem; }
 </tr>
 <tr>
 <td>49</td>
-<td>gusto_nongdm_cohort</td>
+<td>Non-GDM Cohort</td>
 </tr>
 <tr>
 <td>50</td>
@@ -180,12 +170,12 @@ Fetching cohortId: 50
 </code></pre>
 <pre><code>  cohortId                    cohortName generateStats
 1       44                    GDM Cohort          TRUE
-2       49           gusto_nongdm_cohort          TRUE
+2       49                Non-GDM Cohort          TRUE
 3       50 Postpartum T2D Outcome Cohort          TRUE
 </code></pre>
 <h3>3. Build the analysis specification</h3>
 <p>Building the specification uses Strategus functions, not rD2E. See the <a target="_blank" rel="noopener" href="https://ohdsi.github.io/Strategus/">Strategus documentation</a> for the modules and their settings. In this study:</p>
-<pre><code class="language-r"># The analysis: incidence of cohort 50 in cohorts 44 and 49 (see the notebook for irDesign)
+<pre><code class="language-r"># The analysis: incidence of cohort 50 in cohorts 44 and 49 (irDesign is defined in an earlier cell)
 ciModule &lt;- Strategus::CohortIncidenceModule$new()
 ciSpecs  &lt;- ciModule$createModuleSpecifications(irDesign = irDesign)
 
@@ -202,26 +192,15 @@ analysisSpecifications &lt;- addModuleSpecifications(analysisSpecifications, ciS
 </code></pre>
 <h3>4. Choose the run options</h3>
 <pre><code class="language-r">options &lt;- create_options(
-  upload_results          = FALSE,
-  source_token_study_code = &quot;gusto_v3&quot;,
-  analysis_results_name   = &quot;gusto_t2d_outcome_source&quot;
+  source_token_study_code = &quot;my_dataset&quot;,
+  analysis_results_name   = &quot;t2d_incidence_v1&quot;
 )
-print(options)
+options[c(&quot;datasetId&quot;, &quot;analysisResultsName&quot;)]
 </code></pre>
-<pre><code>$mode
-[1] &quot;kernel&quot;
-$datasetId
-[1] &quot;gusto_v3&quot;
-$uploadResults
-[1] FALSE
-$updateResultsSchema
-[1] TRUE
-$tokenStudyCode
-[1] &quot;&quot;
-$runTable1
-[1] FALSE
+<pre><code>$datasetId
+[1] &quot;my_dataset&quot;
 $analysisResultsName
-[1] &quot;gusto_t2d_outcome_source&quot;
+[1] &quot;t2d_incidence_v1&quot;
 </code></pre>
 <h3>5. Submit</h3>
 <p>Run this once. Every run of this cell submits a new study run.</p>
@@ -240,9 +219,7 @@ $analysisResultsName
 $status
 [1] &quot;Successfully created a flow run&quot;
 </code></pre>
-<p>The flow run ID means D2E accepted the run. It does not mean the analysis has finished. See <a href="#submitting-a-study">Submitting a study</a> for what happens next.</p>
-<hr />
-<p>Checked on internal.d2e.sg, 2026-11-23, against trex-notebook <code>242febe</code>. Steps 1–4 were run live. Step 5 shows the real output saved in the notebook from an earlier run; it was not re-run for this guide.</p></section><section class="page" id="get-cohort-definition-set"><p class="kicker">Function reference</p><h2>get_cohort_definition_set()</h2>
+<p>The flow run ID means D2E accepted the run. It does not mean the analysis has finished. See <a href="#submitting-a-study">Submitting a study</a> for what happens next.</p></section><section class="page" id="get-cohort-definition-set"><p class="kicker">Function reference</p><h2>get_cohort_definition_set()</h2>
 <p>Load cohort definitions from ATLAS into R, ready to use in a Strategus analysis specification.</p>
 <h3>Usage</h3>
 <pre><code class="language-r">get_cohort_definition_set(cohortIds, generateStats = FALSE)
@@ -316,40 +293,9 @@ $status
 </code></pre>
 <pre><code>  cohortId                    cohortName generateStats
 1       44                    GDM Cohort          TRUE
-2       49           gusto_nongdm_cohort          TRUE
+2       49                Non-GDM Cohort          TRUE
 3       50 Postpartum T2D Outcome Cohort          TRUE
 </code></pre>
-<h3>Messages you'll see</h3>
-<p>One line per cohort while it loads. They are shown in red but are not errors.</p>
-<pre><code>Fetching cohortId: 44
-Fetching cohortId: 49
-Fetching cohortId: 50
-</code></pre>
-<h3>Errors</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Message</th>
-<th>Cause</th>
-<th>Fix</th>
-<th>Checked</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Must provide a non-zero length cohortIds vector.</code></td>
-<td>No IDs were given</td>
-<td>Pass at least one ID</td>
-<td><span class="chip chip-host">host</span></td>
-</tr>
-<tr>
-<td><code>HTTP GET failed with status &lt;code&gt;: &lt;details&gt;</code></td>
-<td>The cohort could not be loaded: for example the ID doesn't exist, or your session has expired</td>
-<td>Check the ID in ATLAS; if you were signed out, sign in again and re-run your cells. <mark class="flag">TO VERIFY</mark> which status codes appear in each case</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-</tbody>
-</table></div>
 <h3>Examples</h3>
 <pre><code class="language-r"># Load three cohorts and keep inclusion statistics
 cohortDefinitionSet &lt;- get_cohort_definition_set(
@@ -366,13 +312,8 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;)])
 <li><a href="#working-with-cohorts">Working with cohorts</a></li>
 <li><a href="#create-cohort-definition">create_cohort_definition()</a> to create a new cohort</li>
 <li><a href="#getting-started">Getting started</a></li>
-</ul>
-<hr />
-<p>Checked on internal.d2e.sg, 2026-11-23, against trex-notebook <code>242febe</code>.</p></section><section class="page" id="create-cohort-definition"><p class="kicker">Function reference</p><h2>create_cohort_definition()</h2>
+</ul></section><section class="page" id="create-cohort-definition"><p class="kicker">Function reference</p><h2>create_cohort_definition()</h2>
 <p>Create a new cohort definition in ATLAS from R.</p>
-<blockquote>
-<p><strong>Not yet checked on the test host.</strong> Everything on this page comes from the source code. Run the example on the test host before relying on it. <mark class="flag">TO VERIFY</mark></p>
-</blockquote>
 <h3>Usage</h3>
 <pre><code class="language-r">create_cohort_definition(name, description, cohort_definition)
 </code></pre>
@@ -411,58 +352,6 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;)])
 <h3>Value</h3>
 <p>The new cohort definition as stored in ATLAS, as a list. Its <code>id</code> is the new cohort ID to use in <a href="#get-cohort-definition-set">get_cohort_definition_set()</a>. <mark class="flag">TO VERIFY</mark> the other fields returned.</p>
 <p>The new cohort is tagged <code>created_by_rD2E</code>, so you can find it in ATLAS → Cohort Definitions.</p>
-<h3>Messages you'll see</h3>
-<pre><code>Cohort definition created successfully with id: &lt;new id&gt;
-</code></pre>
-<h3>Errors</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Message</th>
-<th>Cause</th>
-<th>Fix</th>
-<th>Checked</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Name must be provided and cannot be empty.</code></td>
-<td><code>name</code> is missing or <code>""</code></td>
-<td>Give the cohort a name</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-<tr>
-<td><code>Description must be provided and cannot be empty.</code></td>
-<td><code>description</code> is missing or <code>""</code></td>
-<td>Add a description</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-<tr>
-<td><code>Cohort definition must be provided and cannot be empty.</code></td>
-<td><code>cohort_definition</code> is empty</td>
-<td>Pass the definition</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-<tr>
-<td><code>cohort_definition must be a list or a JSON string.</code></td>
-<td>Wrong type, for example a number</td>
-<td>Pass a list or JSON text</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-<tr>
-<td><code>Cohort definition JSON must contain an 'expression' field.</code></td>
-<td>The export has an <code>expression</code> field, but it is empty</td>
-<td>Use a complete ATLAS export</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-<tr>
-<td><code>Status code: &lt;code&gt;</code> then <code>Error occurred while creating cohort definition for cohort: &lt;name&gt;</code></td>
-<td>D2E refused to create it, for example because your session expired</td>
-<td>Sign in again and retry; if it persists, contact the platform team</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-</tbody>
-</table></div>
 <h3>Examples</h3>
 <p>Copy an existing cohort under a new name:</p>
 <pre><code class="language-r">existing &lt;- get_cohort_definition_set(50)
@@ -475,24 +364,15 @@ newCohort &lt;- create_cohort_definition(
 
 newCohort$id   # the new cohort's ID
 </code></pre>
-<p><mark class="flag">TO VERIFY</mark> This example has not been run. Running it creates a real cohort definition in ATLAS.</p>
+<p>Running this creates a real cohort definition in ATLAS. <mark class="flag">TO VERIFY</mark></p>
 <h3>See also</h3>
 <ul>
 <li><a href="#get-cohort-definition-set">get_cohort_definition_set()</a></li>
 <li><a href="#working-with-cohorts">Working with cohorts</a></li>
-</ul>
-<hr />
-<p>From the source of trex-notebook <code>242febe</code>. Not yet checked on internal.d2e.sg.</p></section><section class="page" id="create-options"><p class="kicker">Function reference</p><h2>create_options()</h2>
+</ul></section><section class="page" id="create-options"><p class="kicker">Function reference</p><h2>create_options()</h2>
 <p>Choose which dataset a study runs on and how its results are named, before you submit it with <a href="#run-strategus-flow">run_strategus_flow()</a>.</p>
 <h3>Usage</h3>
-<pre><code class="language-r">create_options(
-  token_study_code        = &quot;&quot;,
-  source_token_study_code,
-  upload_results          = FALSE,
-  update_results_schema   = TRUE,
-  run_table1              = FALSE,
-  analysis_results_name   = NULL
-)
+<pre><code class="language-r">create_options(source_token_study_code, analysis_results_name = NULL)
 </code></pre>
 <h3>Arguments</h3>
 <div class="table-wrap"><table>
@@ -509,107 +389,35 @@ newCohort$id   # the new cohort's ID
 <td><code>source_token_study_code</code></td>
 <td>text</td>
 <td>the current session's dataset</td>
-<td>The dataset to run on, for example <code>"gusto_v3"</code>. <mark class="flag">TO VERIFY</mark> which dataset is used when you leave it out, and where researchers find a dataset's code.</td>
+<td>The code of the dataset to run on, for example <code>"my_dataset"</code>. <mark class="flag">TO VERIFY</mark> which dataset is used when you leave it out, and where researchers find a dataset's code.</td>
 </tr>
 <tr>
 <td><code>analysis_results_name</code></td>
 <td>text</td>
 <td>none</td>
-<td>A name for this set of results, for example <code>"gusto_t2d_outcome_source"</code>. One string, at most 255 characters, no control characters. Spaces at either end are removed; an empty name is ignored.</td>
-</tr>
-<tr>
-<td><code>upload_results</code></td>
-<td><code>TRUE</code> / <code>FALSE</code></td>
-<td><code>FALSE</code></td>
-<td>Whether to upload the results. The team's notebooks use <code>FALSE</code>. <mark class="flag">TO VERIFY</mark> what changes with <code>TRUE</code>.</td>
-</tr>
-<tr>
-<td><code>token_study_code</code></td>
-<td>text</td>
-<td><code>""</code></td>
-<td>Leave empty. <mark class="flag">TO VERIFY</mark> when it is needed.</td>
-</tr>
-<tr>
-<td><code>update_results_schema</code></td>
-<td><code>TRUE</code> / <code>FALSE</code></td>
-<td><code>TRUE</code></td>
-<td>Leave at the default. <mark class="flag">TO VERIFY</mark> its effect.</td>
-</tr>
-<tr>
-<td><code>run_table1</code></td>
-<td><code>TRUE</code> / <code>FALSE</code></td>
-<td><code>FALSE</code></td>
-<td>Leave at the default. <mark class="flag">TO VERIFY</mark> its effect.</td>
+<td>A name for this set of results, for example <code>"t2d_incidence_v1"</code>. One string, at most 255 characters, no control characters. Spaces at either end are removed; an empty name is ignored.</td>
 </tr>
 </tbody>
 </table></div>
-<p>Most studies only need <code>source_token_study_code</code> and <code>analysis_results_name</code>.</p>
 <h3>Value</h3>
 <p>A list of run options to pass as <code>options</code> to <a href="#run-strategus-flow">run_strategus_flow()</a>. Nothing is sent to D2E by this function.</p>
 <pre><code class="language-r">options &lt;- create_options(
-  upload_results          = FALSE,
-  source_token_study_code = &quot;gusto_v3&quot;,
-  analysis_results_name   = &quot;gusto_t2d_outcome_source&quot;
+  source_token_study_code = &quot;my_dataset&quot;,
+  analysis_results_name   = &quot;t2d_incidence_v1&quot;
 )
-print(options)
+options[c(&quot;datasetId&quot;, &quot;analysisResultsName&quot;)]
 </code></pre>
-<pre><code>$mode
-[1] &quot;kernel&quot;
-$datasetId
-[1] &quot;gusto_v3&quot;
-$uploadResults
-[1] FALSE
-$updateResultsSchema
-[1] TRUE
-$tokenStudyCode
-[1] &quot;&quot;
-$runTable1
-[1] FALSE
+<pre><code>$datasetId
+[1] &quot;my_dataset&quot;
 $analysisResultsName
-[1] &quot;gusto_t2d_outcome_source&quot;
+[1] &quot;t2d_incidence_v1&quot;
 </code></pre>
 <p><code>datasetId</code> is the code you passed as <code>source_token_study_code</code>.</p>
-<h3>Messages you'll see</h3>
-<p>None.</p>
-<h3>Errors</h3>
-<p>These are checked before anything is submitted, so a bad name fails here and not halfway through a run.</p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Message</th>
-<th>Cause</th>
-<th>Fix</th>
-<th>Checked</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>analysis_results_name must be a single string</code></td>
-<td>More than one name, a number, or <code>NA</code></td>
-<td>Pass one piece of text</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-<tr>
-<td><code>analysis_results_name must not contain control characters</code></td>
-<td>The name contains a line break, tab or similar</td>
-<td>Remove them</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-<tr>
-<td><code>analysis_results_name must be at most 255 characters</code></td>
-<td>The name is too long</td>
-<td>Shorten it</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-</tbody>
-</table></div>
 <h3>See also</h3>
 <ul>
 <li><a href="#run-strategus-flow">run_strategus_flow()</a></li>
 <li><a href="#submitting-a-study">Submitting a study</a></li>
-</ul>
-<hr />
-<p>Checked on internal.d2e.sg, 2026-11-23, against trex-notebook <code>242febe</code>. The example output is from a live run.</p></section><section class="page" id="run-strategus-flow"><p class="kicker">Function reference</p><h2>run_strategus_flow()</h2>
+</ul></section><section class="page" id="run-strategus-flow"><p class="kicker">Function reference</p><h2>run_strategus_flow()</h2>
 <p>Submit a Strategus analysis specification to D2E. D2E starts a run (a "flow run") on the dataset chosen in your options.</p>
 <h3>Usage</h3>
 <pre><code class="language-r">run_strategus_flow(analysisSpecification, executionSettings = NULL, options = list())
@@ -635,7 +443,7 @@ $analysisResultsName
 <td><code>executionSettings</code></td>
 <td></td>
 <td><code>NULL</code></td>
-<td>Leave as <code>NULL</code>, as in all the team's notebooks.</td>
+<td>Leave as <code>NULL</code>.</td>
 </tr>
 <tr>
 <td><code>options</code></td>
@@ -673,39 +481,11 @@ $status
 [1] &quot;Successfully created a flow run&quot;
 </code></pre>
 <p>A flow run ID means D2E <strong>accepted</strong> the run. It does not mean the analysis has finished or succeeded.</p>
-<h3>Messages you'll see</h3>
-<pre><code>Strategus flow run triggered successfully with id: 923fb707-c76f-45cd-ba05-4a8c8d03a214
-</code></pre>
 <h3>Important</h3>
 <ul>
 <li><strong>Every call submits a new run.</strong> Running the cell twice submits the study twice.</li>
 <li><strong>Run All</strong> in the notebook runs this cell too. Keep the submit cell last, and run it on purpose.</li>
 </ul>
-<h3>Errors</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Message</th>
-<th>Cause</th>
-<th>Fix</th>
-<th>Checked</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>options must be provided; use create_options() to build them</code></td>
-<td><code>options</code> was not given</td>
-<td>Pass <code>options = create_options(...)</code>. Nothing was submitted.</td>
-<td><span class="chip chip-host">host</span></td>
-</tr>
-<tr>
-<td><code>Request failed with status code &lt;code&gt;</code></td>
-<td>D2E did not accept the run, for example because your session expired</td>
-<td>Sign in again, re-run your cells, then submit again. If it persists, contact the platform team with the status code.</td>
-<td><span class="chip chip-source">source</span></td>
-</tr>
-</tbody>
-</table></div>
 <h3>Examples</h3>
 <pre><code class="language-r">result &lt;- run_strategus_flow(
   analysisSpecification = analysisSpecifications,
@@ -719,9 +499,7 @@ result$flowrunId   # keep this
 <ul>
 <li><a href="#create-options">create_options()</a></li>
 <li><a href="#submitting-a-study">Submitting a study</a></li>
-</ul>
-<hr />
-<p>Checked on internal.d2e.sg, 2026-11-23, against trex-notebook <code>242febe</code>. The success output is the real output saved in the GUSTO notebook from an earlier run; the submit cell was not re-run for this page.</p></section><section class="page" id="working-with-cohorts"><p class="kicker">Guide</p><h2>Working with cohorts</h2>
+</ul></section><section class="page" id="working-with-cohorts"><p class="kicker">Guide</p><h2>Working with cohorts</h2>
 <p>Strategus studies run on cohorts defined in ATLAS. rD2E brings those definitions into your notebook.</p>
 <h3>Find the IDs</h3>
 <ol>
@@ -752,7 +530,7 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 <h3>Changed a cohort in ATLAS?</h3>
 <p>The notebook holds the definition as it was when you loaded it. After editing a cohort in ATLAS, run the <code>get_cohort_definition_set()</code> cell again, and the cells after it.</p>
 <h3>Create a cohort from the notebook</h3>
-<p><a href="#create-cohort-definition">create_cohort_definition()</a> creates a new cohort definition in ATLAS, for example a copy of an existing one under a new name. <mark class="flag">TO VERIFY</mark> Not yet checked on the test host.</p>
+<p><a href="#create-cohort-definition">create_cohort_definition()</a> creates a new cohort definition in ATLAS, for example a copy of an existing one under a new name. <mark class="flag">TO VERIFY</mark></p>
 <h3>See also</h3>
 <ul>
 <li><a href="#get-cohort-definition-set">get_cohort_definition_set()</a></li>
@@ -769,12 +547,11 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 </ul>
 <h3>Choose the options</h3>
 <pre><code class="language-r">options &lt;- create_options(
-  upload_results          = FALSE,
-  source_token_study_code = &quot;gusto_v3&quot;,
-  analysis_results_name   = &quot;gusto_t2d_outcome_source&quot;
+  source_token_study_code = &quot;my_dataset&quot;,
+  analysis_results_name   = &quot;t2d_incidence_v1&quot;
 )
 </code></pre>
-<p>See <a href="#create-options">create_options()</a> for every argument. Most studies only need these two settings plus <code>upload_results = FALSE</code>, as in the team's notebooks.</p>
+<p>See <a href="#create-options">create_options()</a> for both arguments.</p>
 <h3>Submit once</h3>
 <pre><code class="language-r">result &lt;- run_strategus_flow(
   analysisSpecification = analysisSpecifications,
@@ -815,21 +592,19 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 <li><a href="#run-strategus-flow">run_strategus_flow()</a></li>
 <li><a href="#troubleshooting">Troubleshooting</a></li>
 </ul></section><section class="page" id="troubleshooting"><p class="kicker">Guide</p><h2>Troubleshooting</h2>
-<p>Every message rD2E can show, with what to do. "Checked" says whether the message was reproduced on the test host (<code>host</code>) or read from the source code (<code>source</code>).</p>
+<p>Every message rD2E can show, with what to do.</p>
 <h3>Signed out</h3>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>You see</th>
 <th>What to do</th>
-<th>Checked</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>ATLAS shows <em>Your session has expired. Please sign in again.</em></td>
 <td>Sign in again. Then run your cells again from the top: the notebook's R session starts fresh.</td>
-<td><span class="chip chip-host">host</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -840,24 +615,20 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 <tr>
 <th>Message</th>
 <th>What to do</th>
-<th>Checked</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>Fetching cohortId: &lt;id&gt;</code> (red)</td>
 <td>Nothing. It's a progress message.</td>
-<td><span class="chip chip-host">host</span></td>
 </tr>
 <tr>
 <td><code>Must provide a non-zero length cohortIds vector.</code></td>
 <td>Pass at least one cohort ID</td>
-<td><span class="chip chip-host">host</span></td>
 </tr>
 <tr>
 <td><code>HTTP GET failed with status &lt;code&gt;: &lt;details&gt;</code></td>
 <td>Check the ID exists in ATLAS → Cohort Definitions. If you were signed out, sign in again and re-run.</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -867,39 +638,32 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 <tr>
 <th>Message</th>
 <th>What to do</th>
-<th>Checked</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>Name must be provided and cannot be empty.</code></td>
 <td>Give the cohort a name</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 <tr>
 <td><code>Description must be provided and cannot be empty.</code></td>
 <td>Add a description</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 <tr>
 <td><code>Cohort definition must be provided and cannot be empty.</code></td>
 <td>Pass the definition</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 <tr>
 <td><code>cohort_definition must be a list or a JSON string.</code></td>
 <td>Pass a list or JSON text</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 <tr>
 <td><code>Cohort definition JSON must contain an 'expression' field.</code></td>
 <td>Use a complete ATLAS export</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 <tr>
 <td><code>Error occurred while creating cohort definition for cohort: &lt;name&gt;</code></td>
 <td>Sign in again and retry; if it persists, contact the platform team with the status code shown above it</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -909,24 +673,20 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 <tr>
 <th>Message</th>
 <th>What to do</th>
-<th>Checked</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>analysis_results_name must be a single string</code></td>
 <td>Pass one piece of text</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 <tr>
 <td><code>analysis_results_name must not contain control characters</code></td>
 <td>Remove line breaks and tabs</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 <tr>
 <td><code>analysis_results_name must be at most 255 characters</code></td>
 <td>Shorten the name</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -936,19 +696,16 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 <tr>
 <th>Message</th>
 <th>What to do</th>
-<th>Checked</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>options must be provided; use create_options() to build them</code></td>
 <td>Pass <code>options = create_options(...)</code>. Nothing was submitted.</td>
-<td><span class="chip chip-host">host</span></td>
 </tr>
 <tr>
 <td><code>Request failed with status code &lt;code&gt;</code></td>
 <td>Sign in again, re-run your cells, then submit again. If it persists, contact the platform team with the code.</td>
-<td><span class="chip chip-source">source</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -958,19 +715,16 @@ print(cohortDefinitionSet[, c(&quot;cohortId&quot;, &quot;cohortName&quot;, &quo
 <tr>
 <th>You see</th>
 <th>What to do</th>
-<th>Checked</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>Requested package &lt;name&gt; not found in webR binary repo.</code></td>
 <td>The package isn't available in the notebook. Contact the platform team.</td>
-<td><span class="chip chip-host">host</span></td>
 </tr>
 <tr>
-<td><code>object 'cohortDefinitionSet' not found</code> (or another name)</td>
+<td><code>object 'cohortDefinitionSet' not found</code> (or another name) <mark class="flag">TO VERIFY</mark> exact wording</td>
 <td>A cell above wasn't run. Run the cells from the top.</td>
-<td><mark class="flag">TO VERIFY</mark> exact wording</td>
 </tr>
 </tbody>
 </table></div>

@@ -1,6 +1,6 @@
 # Getting started
 
-This walkthrough follows a real study from the notebook *GUSTO-incidence-strategus_v1* on the test host: the incidence of postpartum type 2 diabetes in pregnancies with and without gestational diabetes (GDM). It runs on the `gusto_v3` dataset.
+This walkthrough follows an example study: the incidence of postpartum type 2 diabetes in pregnancies with and without gestational diabetes (GDM). Replace the cohort IDs, dataset code and results name with your own.
 
 ## 1. Find your cohort IDs
 
@@ -9,7 +9,7 @@ In ATLAS, open **Cohort Definitions**. The **ID** column is the number you use i
 | ID | Cohort |
 |---|---|
 | 44 | GDM Cohort |
-| 49 | gusto_nongdm_cohort |
+| 49 | Non-GDM Cohort |
 | 50 | Postpartum T2D Outcome Cohort |
 
 ## 2. Load the cohorts
@@ -41,7 +41,7 @@ print(cohortDefinitionSet[, c("cohortId", "cohortName", "generateStats")])
 ```
   cohortId                    cohortName generateStats
 1       44                    GDM Cohort          TRUE
-2       49           gusto_nongdm_cohort          TRUE
+2       49                Non-GDM Cohort          TRUE
 3       50 Postpartum T2D Outcome Cohort          TRUE
 ```
 
@@ -50,7 +50,7 @@ print(cohortDefinitionSet[, c("cohortId", "cohortName", "generateStats")])
 Building the specification uses Strategus functions, not rD2E. See the [Strategus documentation](https://ohdsi.github.io/Strategus/) for the modules and their settings. In this study:
 
 ```r
-# The analysis: incidence of cohort 50 in cohorts 44 and 49 (see the notebook for irDesign)
+# The analysis: incidence of cohort 50 in cohorts 44 and 49 (irDesign is defined in an earlier cell)
 ciModule <- Strategus::CohortIncidenceModule$new()
 ciSpecs  <- ciModule$createModuleSpecifications(irDesign = irDesign)
 
@@ -70,28 +70,17 @@ analysisSpecifications <- addModuleSpecifications(analysisSpecifications, ciSpec
 
 ```r
 options <- create_options(
-  upload_results          = FALSE,
-  source_token_study_code = "gusto_v3",
-  analysis_results_name   = "gusto_t2d_outcome_source"
+  source_token_study_code = "my_dataset",
+  analysis_results_name   = "t2d_incidence_v1"
 )
-print(options)
+options[c("datasetId", "analysisResultsName")]
 ```
 
 ```
-$mode
-[1] "kernel"
 $datasetId
-[1] "gusto_v3"
-$uploadResults
-[1] FALSE
-$updateResultsSchema
-[1] TRUE
-$tokenStudyCode
-[1] ""
-$runTable1
-[1] FALSE
+[1] "my_dataset"
 $analysisResultsName
-[1] "gusto_t2d_outcome_source"
+[1] "t2d_incidence_v1"
 ```
 
 ## 5. Submit
@@ -122,7 +111,3 @@ $status
 ```
 
 The flow run ID means D2E accepted the run. It does not mean the analysis has finished. See [Submitting a study](guides/submitting-a-study.md) for what happens next.
-
----
-
-Checked on internal.d2e.sg, 2026-11-23, against trex-notebook `242febe`. Steps 1–4 were run live. Step 5 shows the real output saved in the notebook from an earlier run; it was not re-run for this guide.
